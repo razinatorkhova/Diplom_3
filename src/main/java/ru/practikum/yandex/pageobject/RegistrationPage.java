@@ -1,5 +1,6 @@
 package ru.practikum.yandex.pageobject;
 
+import io.qameta.allure.Step;
 import ru.practikum.yandex.elements.ButtonElement;
 import ru.practikum.yandex.elements.InputElement;
 import ru.practikum.yandex.model.generator.UserGenerator;
@@ -16,42 +17,42 @@ public class RegistrationPage {
     private String registrRegistrationButtonLocator = ".//button[contains(@class, 'button_button__33qZ0') and text()='Зарегистрироваться']";
     private String entranceOnRegistrationPageButtonLocator = ".//*[@class='Auth_link__1fOlj' and text()='Войти']";
 
-    // Метод для заполнения поля имени
+    @Step("Заполнение поля Имя")
     public void setNameInput(String name) {
         InputElement nameInput = new InputElement(nameInputLocator);
         nameInput.setValue(name);
     }
 
-    // Метод для заполнения поля email
+    @Step("Заполнение поля email")
     public void setEmailInput(String email) {
         InputElement emailInput = new InputElement(emailInputLocator);
         emailInput.setValue(email);
     }
 
-    // Метод для заполнения поля пароля
+    @Step("Заполнение поля Пароль")
     public void setPasswordInput(String password) {
         InputElement passwordInput = new InputElement(passwordInputLocator);
         passwordInput.setValue(password);
     }
 
-    // Метод для заполнения поля некорректным паролем
+    @Step("Заполнение поля Пароль некорректным значением")
     public void setIncorrectPasswordInput() {
         setPasswordInput("zzzz");
     }
 
-    // Метод для нажатия кнопки регистрации
+    @Step("Клик по кнопке входа на странице регистрации")
     public void entranceOnRegistrationPageButtonClick() {
         ButtonElement entranceOnRegistrationPageButton = new ButtonElement(entranceOnRegistrationPageButtonLocator);
         entranceOnRegistrationPageButton.clickButton();
     }
 
-    // Метод для нажатия кнопки регистрации
+    @Step("Клик по кнопке регистрации")
     public void registrRegistrationButtonClick() {
         ButtonElement registrRegistrationButton = new ButtonElement(registrRegistrationButtonLocator);
         registrRegistrationButton.clickButton();
     }
 
-    // Метод для регистрации нового пользователя
+    @Step("Регистрация нового пользователя")
     public void registerNewUser() {
         UserDataLombok user = UserGenerator.getRandomUser();
         setNameInput(user.getName());
@@ -60,23 +61,13 @@ public class RegistrationPage {
         registrRegistrationButtonClick();
     }
 
-    // Метод для регистрации нового пользователя с Некорректным Паролем
+    @Step("Регистрация нового пользователя с некорректным полем Пароль")
     public void registerNewUserWithIncorrectPassword() {
         UserDataLombok user = UserGenerator.getRandomUser();
         setNameInput(user.getName());
         setEmailInput(user.getEmail());
         setIncorrectPasswordInput();
         registrRegistrationButtonClick();
-    }
-
-    // Проверка отображения сообщения об ошибке
-    public boolean isErrorDisplayed() {
-        String errorMessageLocator = "p.input__error.text_type_main-default";
-        String expectedErrorMessage = "Некорректный пароль";
-        // Получаем текст сообщения об ошибке
-        String actualErrorMessage = $(errorMessageLocator).getText();
-        // Проверяем, отображается ли сообщение и соответствует ли оно ожидаемому
-        return !actualErrorMessage.isEmpty() && actualErrorMessage.contains(expectedErrorMessage);
     }
 }
    

@@ -1,18 +1,18 @@
 import com.codeborne.selenide.Selenide;
+import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
 import org.junit.Test;
+import ru.practikum.yandex.api.Endpoints;
 import ru.practikum.yandex.api.UserApi;
 import ru.practikum.yandex.model.lombok.UserDataLombok;
 import ru.practikum.yandex.pageobject.EntrancePage;
 import ru.practikum.yandex.pageobject.MainPage;
 import ru.practikum.yandex.pageobject.PersonalAccountPage;
+
 import static org.junit.Assert.assertTrue;
 import static ru.practikum.yandex.model.generator.UserGenerator.getRandomUser;
-import static ru.practikum.yandex.pageobject.EntrancePage.LOGIN_PAGE_URL;
-import static ru.practikum.yandex.pageobject.MainPage.MAIN_PAGE_URL;
-import static ru.practikum.yandex.pageobject.PersonalAccountPage.PERSONAL_ACCOUNT_PAGE_URL;
 
 @Feature("Check personal account")
 public class PersonalAccountTest extends BaseUITest {
@@ -41,27 +41,39 @@ public class PersonalAccountTest extends BaseUITest {
     }
 
     @DisplayName("Check open personal account")
+    @Description("Verify the transition to the personal account by clicking on the 'Personal Account' button.")
     @Test
     public void checkOpenPersonalAccountTest() {
         loginUser();
         new MainPage().personalAccountButtonClick();
-        assertCurrentUrl(PERSONAL_ACCOUNT_PAGE_URL);
+        assertCurrentUrl(Endpoints.PERSONAL_ACCOUNT_PAGE_URL);
     }
 
-    @DisplayName("Check open constructor from personal account page")
+    @DisplayName("Check open constructor from personal account page by clicking on “Constructor")
+    @Description("Verify the transition from the personal account page to the constructor by clicking on the 'Constructor' link")
     @Test
-    public void checkOpenConstructorFromPersonalAccountPageTest() {
+    public void checkOpenConstructorFromPersonalAccountPageTestByConstructorLink() {
         loginUser();
         PersonalAccountPage personalAccountPage = new PersonalAccountPage();
 
         personalAccountPage.constructorLinkClick();
-        assertCurrentUrl(MAIN_PAGE_URL);
+        assertCurrentUrl(Endpoints.MAIN_PAGE_URL);
+
+    }
+
+    @DisplayName("Check open constructor from personal account page by clicking on “Constructor")
+    @Description("Verify the transition from the personal account page to the constructor by clicking on the logo 'Stellar Burgers'")
+    @Test
+    public void checkOpenConstructorFromPersonalAccountPageTestByStellarBurgers() {
+        loginUser();
+        PersonalAccountPage personalAccountPage = new PersonalAccountPage();
 
         personalAccountPage.stellarBurgersLinkClick();
-        assertCurrentUrl(MAIN_PAGE_URL);
+        assertCurrentUrl(Endpoints.MAIN_PAGE_URL);
     }
 
     @DisplayName("Check exit from personal account")
+    @Description("Verify the logout functionality by clicking on the 'Logout' button in the personal account.")
     @Test
     public void checkExitFromPersonalAccountTest() {
         loginUser();
@@ -69,6 +81,6 @@ public class PersonalAccountTest extends BaseUITest {
         MainPage mainPage = new MainPage();
         mainPage.personalAccountButtonClick();
         personalAccountPage.exitFromPersonalAccountButtonClick();
-        assertCurrentUrl(LOGIN_PAGE_URL);
+        assertCurrentUrl(Endpoints.LOGIN_PAGE_URL);
     }
 }

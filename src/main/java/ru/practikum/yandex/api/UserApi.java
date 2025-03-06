@@ -8,18 +8,6 @@ import ru.practikum.yandex.model.lombok.UserDataLombok;
 import static io.restassured.RestAssured.given;
 
 public class UserApi extends RestApi {
-    /**
-     * URI для создания пользователя
-     */
-    public static final String CREATE_USER_URI = "/api/auth/register";
-    /**
-     * URI для авторизации пользователя
-     */
-    public static final String LOGIN_USER_URI = "/api/auth/login";
-    /**
-     * URI для получения, обновления и удаления пользователя
-     */
-    public static final String GET_CHANGE_DELETE_DATA_USER_URI = "/api/auth/user";
 
     @Step("Create user")
     public ValidatableResponse createUserLombok(UserDataLombok user) {
@@ -28,7 +16,7 @@ public class UserApi extends RestApi {
                 .and()
                 .body(user)
                 .when()
-                .post(CREATE_USER_URI)
+                .post(Endpoints.CREATE_USER_API_URI)
                 .then();
     }
 
@@ -39,7 +27,7 @@ public class UserApi extends RestApi {
                 .spec(requestSpecification())
                 .header("Authorization", userAccessToken) // Добавляем токен в заголовки
                 .when()
-                .delete(GET_CHANGE_DELETE_DATA_USER_URI)
+                .delete(Endpoints.GET_CHANGE_DELETE_DATA_USER_API_URI)
                 .then();
     }
 
@@ -50,7 +38,7 @@ public class UserApi extends RestApi {
                 .and()
                 .body(user)
                 .when()
-                .post(LOGIN_USER_URI)
+                .post(Endpoints.LOGIN_USER_API_URI)
                 .then();
     }
 }

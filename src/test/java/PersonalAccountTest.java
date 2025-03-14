@@ -1,86 +1,85 @@
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
 import org.junit.Test;
 import ru.practikum.yandex.api.Endpoints;
-import ru.practikum.yandex.api.UserApi;
-import ru.practikum.yandex.model.lombok.UserDataLombok;
 import ru.practikum.yandex.pageobject.EntrancePage;
 import ru.practikum.yandex.pageobject.MainPage;
 import ru.practikum.yandex.pageobject.PersonalAccountPage;
+import ru.practikum.yandex.pageobject.RegistrationPage;
 
-import static org.junit.Assert.assertTrue;
-import static ru.practikum.yandex.model.generator.UserGenerator.getRandomUser;
+import static org.junit.Assert.assertEquals;
 
 @Feature("Check personal account")
 public class PersonalAccountTest extends BaseUITest {
-
-    private String userEmail;
-    private String userPassword;
+    protected String userEmail;
+    protected String userPassword;
+    RegistrationPage registrationPage = new RegistrationPage();
+    MainPage mainPage = new MainPage();
+    EntrancePage entrancePage = new EntrancePage();
 
     @Before
     public void setUp() {
-        UserDataLombok userDataLombok = getRandomUser("Vlad54321", "password54321", "Vlad");
-        new UserApi().createUserLombok(userDataLombok); // Создание пользователя
+
         userEmail = userDataLombok.getEmail();
         userPassword = userDataLombok.getPassword();
-        new MainPage().openMainPage();
     }
 
-    private void loginUser() {
-        new MainPage().personalAccountButtonClick();
-        new EntrancePage().loginUser(userEmail, userPassword);
-        new MainPage().isVisibleGetOrderButton();
-    }
-
-    private void assertCurrentUrl(String expectedUrl) {
-        assertTrue("Не удалось перейти на ожидаемую страницу",
-                Selenide.Wait().until(webDriver -> webDriver.getCurrentUrl().equals(expectedUrl)));
-    }
 
     @DisplayName("Check open personal account")
     @Description("Verify the transition to the personal account by clicking on the 'Personal Account' button.")
     @Test
     public void checkOpenPersonalAccountTest() {
-        loginUser();
-        new MainPage().personalAccountButtonClick();
-        assertCurrentUrl(Endpoints.PERSONAL_ACCOUNT_PAGE_URL);
+
+        mainPage.entranceToPersonalAccount(userEmail, userPassword, entrancePage);
+        String expectedUrl = Endpoints.PERSONAL_ACCOUNT_PAGE_URL;
+        registrationPage.waitForExpectedUrl(expectedUrl);
+        String actualUrl = WebDriverRunner.url();
+
+        assertEquals("'Личный кабинет' не отобразился", expectedUrl, actualUrl);
     }
 
     @DisplayName("Check open constructor from personal account page by clicking on “Constructor")
     @Description("Verify the transition from the personal account page to the constructor by clicking on the 'Constructor' link")
     @Test
     public void checkOpenConstructorFromPersonalAccountPageTestByConstructorLink() {
-        loginUser();
+        mainPage.entranceToPersonalAccount(userEmail, userPassword, entrancePage);
         PersonalAccountPage personalAccountPage = new PersonalAccountPage();
-
         personalAccountPage.constructorLinkClick();
-        assertCurrentUrl(Endpoints.MAIN_PAGE_URL);
+        String expectedUrl = Endpoints.MAIN_PAGE_URL;
+        registrationPage.waitForExpectedUrl(expectedUrl);
+        String actualUrl = WebDriverRunner.url();
 
+        assertEquals("Переход по клику 'Конструктор' не произведен", expectedUrl, actualUrl);
     }
 
-    @DisplayName("Check open constructor from personal account page by clicking on “Constructor")
+    @DisplayName("Check open stellar burgers from personal account page by clicking on “Stellar Burgers")
     @Description("Verify the transition from the personal account page to the constructor by clicking on the logo 'Stellar Burgers'")
     @Test
-    public void checkOpenConstructorFromPersonalAccountPageTestByStellarBurgers() {
-        loginUser();
+    public void checkOpenStellarBurgersFromPersonalAccountPageTestByStellarBurgers() {
+        mainPage.entranceToPersonalAccount(userEmail, userPassword, entrancePage);
         PersonalAccountPage personalAccountPage = new PersonalAccountPage();
-
         personalAccountPage.stellarBurgersLinkClick();
-        assertCurrentUrl(Endpoints.MAIN_PAGE_URL);
+        String expectedUrl = Endpoints.MAIN_PAGE_URL;
+        registrationPage.waitForExpectedUrl(expectedUrl);
+        String actualUrl = WebDriverRunner.url();
+        assertEquals("Переход по клику 'Stellar Burgers' не произведен", expectedUrl, actualUrl);
     }
 
     @DisplayName("Check exit from personal account")
     @Description("Verify the logout functionality by clicking on the 'Logout' button in the personal account.")
     @Test
     public void checkExitFromPersonalAccountTest() {
-        loginUser();
+        mainPage.entranceToPersonalAccount(userEmail, userPassword, entrancePage);
         PersonalAccountPage personalAccountPage = new PersonalAccountPage();
         MainPage mainPage = new MainPage();
         mainPage.personalAccountButtonClick();
         personalAccountPage.exitFromPersonalAccountButtonClick();
-        assertCurrentUrl(Endpoints.LOGIN_PAGE_URL);
+        String expectedUrl = Endpoints.LOGIN_PAGE_URL;
+        registrationPage.waitForExpectedUrl(expectedUrl);
+        String actualUrl = WebDriverRunner.url();
+        assertEquals("Выход из 'Личного кабинета' не произведен", expectedUrl, actualUrl);
     }
 }

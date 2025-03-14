@@ -1,12 +1,11 @@
 package ru.practikum.yandex.pageobject;
 
+import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Step;
 import ru.practikum.yandex.elements.ButtonElement;
 import ru.practikum.yandex.elements.InputElement;
 import ru.practikum.yandex.model.generator.UserGenerator;
 import ru.practikum.yandex.model.lombok.UserDataLombok;
-
-import static com.codeborne.selenide.Selenide.$;
 
 public class RegistrationPage {
 
@@ -16,6 +15,8 @@ public class RegistrationPage {
     private String passwordInputLocator = ".//div[label[text()='Пароль']]/input[@name='Пароль']";
     private String registrRegistrationButtonLocator = ".//button[contains(@class, 'button_button__33qZ0') and text()='Зарегистрироваться']";
     private String entranceOnRegistrationPageButtonLocator = ".//*[@class='Auth_link__1fOlj' and text()='Войти']";
+    // Локатор для сообщения об ошибке
+    private String errorMessageLocator = "p.input__error.text_type_main-default";
 
     @Step("Заполнение поля Имя")
     public void setNameInput(String name) {
@@ -69,6 +70,19 @@ public class RegistrationPage {
         setIncorrectPasswordInput();
         registrRegistrationButtonClick();
     }
+
+    @Step("Ожидание появления сообщения об ошибке 'Некорректный пароль' и извлечение текста сообщения")
+    public String waitAndGetErrorMessage() {
+
+        return Selenide.$(errorMessageLocator).getText();
+    }
+
+    @Step("Метод для ожидания перехода на ожидаемый URL")
+    public void waitForExpectedUrl(String expectedUrl) {
+
+        Selenide.Wait().until(webDriver -> webDriver.getCurrentUrl().equals(expectedUrl));
+    }
 }
+
    
 

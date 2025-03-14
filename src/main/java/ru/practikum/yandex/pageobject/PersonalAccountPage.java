@@ -15,7 +15,7 @@ public class PersonalAccountPage {
     //кнопка Выход
     private String exitFromPersonalAccountButtonLocator = ".//button[@type='button' and contains(@class, 'Account_button') and text()='Выход']";
 
-    //клик по Конструктору
+    @Step("Клик по логотипу 'Конструктор'")
     public void constructorLinkClick() {
         LinkElement constructorLink = new LinkElement(constructorLinkLocator);
         constructorLink.clickLink();

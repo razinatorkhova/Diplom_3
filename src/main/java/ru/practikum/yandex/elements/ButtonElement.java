@@ -4,7 +4,6 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.enabled;
-import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 public class ButtonElement {
@@ -18,9 +17,5 @@ public class ButtonElement {
         buttonElement.shouldBe(enabled);
         buttonElement.scrollIntoView(true);
         buttonElement.click();
-    }
-
-    public boolean isVisibleButton() {
-        return buttonElement.is(visible);
     }
 }

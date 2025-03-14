@@ -10,10 +10,6 @@ public class Endpoints {
      */
     public static final String CREATE_USER_API_URI = "/api/auth/register";
     /**
-     * URI для авторизации пользователя
-     */
-    public static final String LOGIN_USER_API_URI = "/api/auth/login";
-    /**
      * URI для получения, обновления и удаления пользователя
      */
     public static final String GET_CHANGE_DELETE_DATA_USER_API_URI = "/api/auth/user";
